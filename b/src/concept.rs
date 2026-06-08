@@ -20,12 +20,12 @@ type CubeSlot = Option<Box<dyn Cube<Target = CubeImage>>>;
 
 /// 区块, 包含 16x16x16 个方块, 每个方块的图形固定为 13x13
 pub struct CubeBlock {
-    cubes: [[[CubeSlot; 16]; 16]; 16],
+    pub cubes: [[[CubeSlot; 16]; 16]; 16],
 }
 
-/// 区块的图形, 固定为 129x129
+/// 区块的图形, 固定为 193x193, 用于渲染整个区块的外观
 pub struct CubeBlockImage {
-    pub image: RGBAImage<129, 129>,
+    pub image: RGBAImage<193, 193>,
 }
 
 // 用某个背景颜色初始化区块的图形
