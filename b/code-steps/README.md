@@ -31,11 +31,11 @@ fn main() {
 Terminal output:
 
 ```
-// Create and save an image                          ← cyan comment
+// Create and save an image                         ← cyan comment
    let img = Image::new(128, 128);                  ← syntax-highlighted
-   img.save("output.png")?;                          ← ayu-dark theme
-   ⏸  [wait] — press any key...                      ← pause
-   ok                                                 ← green
+   img.save("output.png")?;                         ← ayu-dark theme
+   ⏸  [wait] — press any key...                     ← pause
+   ok                                               ← green
 
 // Load it back
    let img = Image::load("output.png")?;

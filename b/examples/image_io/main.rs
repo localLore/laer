@@ -24,6 +24,7 @@ fn main() -> image::ImageResult<()> {
     step!("3. 加载 PNG 再重新保存（往返测试）", {
         let img = b::data::RGBAImage::load("examples/export_cube/export/cube_white.png")?;
         img.save("examples/export_cube/export/cube_roundtrip.png")?;
+        [wait]
     });
 
     Ok(())
