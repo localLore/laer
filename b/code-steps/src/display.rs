@@ -45,32 +45,23 @@ fn highlighting() -> &'static (SyntaxSet, ThemeSet) {
     })
 }
 
-fn print_highlighted_with_style(code: &str, dim: bool) -> usize {
+fn print_highlighted(code: &str) {
     let (ss, ts) = highlighting();
     let syntax = ss.find_syntax_by_name("Rust").expect("Rust syntax");
     let theme = &ts.themes[THEME];
     let mut h = HighlightLines::new(syntax, theme);
 
-    let mut line_count = 0;
     for line in LinesWithEndings::from(code) {
-        line_count += 1;
         let ranges = h.highlight_line(line, ss).unwrap();
-        if dim {
-            let _ = write!(io::stderr(), "\x1b[90m   ");
-            let _ = writeln!(io::stderr(), "{}", line.trim_end());
-            let _ = write!(io::stderr(), "\x1b[0m");
-        } else {
-            let _ = write!(io::stderr(), "   ");
-            for (style, text) in ranges {
-                let _ = write!(
-                    io::stderr(),
-                    "{}",
-                    syntect::util::as_24_bit_terminal_escaped(&[(style, text)], false)
-                );
-            }
+        let _ = write!(io::stderr(), "   ");
+        for (style, text) in ranges {
+            let _ = write!(
+                io::stderr(),
+                "{}",
+                syntect::util::as_24_bit_terminal_escaped(&[(style, text)], false)
+            );
         }
     }
-    line_count
 }
 
 // ── 公开 API ──
@@ -85,18 +76,9 @@ pub fn print_step_header(comment: &str) {
     let _ = writeln!(io::stderr(), "\x1b[36m// {}\x1b[0m", comment);
 }
 
-/// 打印语法高亮代码，同时保存光标位置供 dim_code 原地覆盖
+/// 打印语法高亮代码
 pub fn print_code(code: &str) {
-    let _ = write!(io::stderr(), "\x1b[s");
-    let _ = io::stderr().flush();
-    print_highlighted_with_style(code, false);
-}
-
-/// 回到 print_code 时的光标位置，灰色覆盖
-pub fn dim_code(code: &str) {
-    let _ = write!(io::stderr(), "\x1b[u");
-    let _ = io::stderr().flush();
-    print_highlighted_with_style(code, true);
+    print_highlighted(code);
 }
 
 pub fn print_step_done() {
@@ -104,7 +86,7 @@ pub fn print_step_done() {
 }
 
 pub fn press_any_key() {
-    use std::io::Read;
     let _ = writeln!(io::stderr(), "\x1b[33m    ...\x1b[0m");
-    let _ = io::stdin().read_exact(&mut [0u8; 1]);
+    let mut buf = String::new();
+    let _ = io::stdin().read_line(&mut buf);
 }

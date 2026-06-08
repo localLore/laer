@@ -91,8 +91,7 @@ All output goes to **stderr**, leaving stdout clean for your program's output.
 |----------|---------|
 | `display::print_file_header(path)` | Print a bold file header with surrounding blank lines |
 | `display::print_step_header(comment)` | Print a cyan `// comment` line |
-| `display::print_code(code)` | Print syntax-highlighted code (saves cursor for dim) |
-| `display::dim_code(code)` | Overwrite last code block in gray |
+| `display::print_code(code)` | Print syntax-highlighted code |
 | `display::print_step_done()` | Print green `ok` |
 | `display::press_any_key()` | Print yellow prompt and wait for keypress |
 

@@ -84,7 +84,6 @@ pub fn step(input: TokenStream) -> TokenStream {
             ::code_steps::display::print_step_header(#comment_str);
             ::code_steps::display::print_code(#code_str);
             let __result = #block;
-            ::code_steps::display::dim_code(#code_str);
             ::code_steps::display::print_step_done();
             __result
         }

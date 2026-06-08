@@ -138,12 +138,7 @@ impl CubeBlock {
                                 let sx = screen_x + px as isize;
                                 let sy = screen_y + py as isize;
 
-                                if sx >= 0 && sx < 193 && sy >= 0 && sy < 193 {
-                                    let src = &cube_pixels[py][px];
-                                    if src.a > 0 {
-                                        image.image.pixels[sy as usize][sx as usize] = src.clone();
-                                    }
-                                }
+                                image.image.blend_pixel(sx, sy, &cube_pixels[py][px]);
                             }
                         }
                     }
