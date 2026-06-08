@@ -1,6 +1,24 @@
-//! Pixel blending operations ("over" alpha compositing) for RGBAImage.
+//! RGBA color value — the fundamental pixel type used throughout the crate.
 
-use crate::data::{RGBAColor, RGBAImage};
+/// A single RGBA pixel with 8 bits per channel.
+#[derive(Clone, Copy)]
+pub struct RGBAColor {
+    pub r: u8,
+    pub g: u8,
+    pub b: u8,
+    pub a: u8,
+}
+
+impl Default for RGBAColor {
+    fn default() -> Self {
+        RGBAColor {
+            r: 0,
+            g: 0,
+            b: 0,
+            a: 0,
+        }
+    }
+}
 
 impl RGBAColor {
     /// Standard "over" alpha compositing: blend `self` (source / foreground)
@@ -12,22 +30,19 @@ impl RGBAColor {
         let sa = self.a as u16;
         let da = dst.a as u16;
 
-        // Fully opaque source → source wins
+        // Fast paths for common edge cases.
         if sa == 255 {
             return *self;
         }
-        // Fully transparent source → destination wins
         if sa == 0 {
             return *dst;
         }
-        // Fully transparent destination → source wins
         if da == 0 {
             return *self;
         }
 
         let inv_sa = 255 - sa;
         let out_a = sa + da * inv_sa / 255;
-        // The result is at least as opaque as source, so out_a > 0
 
         let r = (self.r as u16 * sa + dst.r as u16 * da * inv_sa / 255) / out_a;
         let g = (self.g as u16 * sa + dst.g as u16 * da * inv_sa / 255) / out_a;
@@ -39,25 +54,5 @@ impl RGBAColor {
             b: b as u8,
             a: out_a as u8,
         }
-    }
-}
-
-impl<const W: usize, const H: usize> RGBAImage<W, H> {
-    /// Blend a source pixel at screen coordinates `(x, y)` using the "over" operator.
-    ///
-    /// Silently does nothing when:
-    /// - coordinates are out of bounds, or
-    /// - `src` is fully transparent.
-    pub fn blend_pixel(&mut self, x: isize, y: isize, src: &RGBAColor) {
-        if x < 0 || y < 0 {
-            return;
-        }
-        let x = x as usize;
-        let y = y as usize;
-        if x >= W || y >= H || src.a == 0 {
-            return;
-        }
-        let blended = src.blend_over(&self.pixels[y][x]);
-        self.pixels[y][x] = blended;
     }
 }

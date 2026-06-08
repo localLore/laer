@@ -1,17 +1,23 @@
-use image::RgbaImage as ImgBuf;
+//! File I/O for RGBAImage: load from / save to disk.
+
 use std::path::Path;
 
-use crate::concept::CubeBlockImage;
-use crate::data::{RGBAColor, RGBAImage};
+use image::RgbaImage as ImgBuf;
+
+use crate::color::RGBAColor;
+use crate::image::RGBAImage;
 
 impl<const W: usize, const H: usize> RGBAImage<W, H> {
-    /// 从文件加载 RGBA 图像，尺寸必须完全匹配
+    /// Load an RGBA image from file. Dimensions must match `W`×`H` exactly.
+    ///
+    /// # Panics
+    /// Panics if the image dimensions don't match.
     pub fn load(path: impl AsRef<Path>) -> image::ImageResult<Self> {
         let img = image::open(path)?.to_rgba8();
         let (w, h) = img.dimensions();
 
-        assert_eq!(w as usize, W, "图像宽度必须为 {W}");
-        assert_eq!(h as usize, H, "图像高度必须为 {H}");
+        assert_eq!(w as usize, W, "image width must be {W}, got {w}");
+        assert_eq!(h as usize, H, "image height must be {H}, got {h}");
 
         let mut pixels = [[RGBAColor::default(); W]; H];
         for y in 0..H {
@@ -28,7 +34,8 @@ impl<const W: usize, const H: usize> RGBAImage<W, H> {
         Ok(RGBAImage { pixels })
     }
 
-    /// 导出到文件（格式由扩展名自动决定：.png / .jpg / .bmp / .tiff 等）
+    /// Save the image to file. Format is inferred from the extension
+    /// (`.png`, `.jpg`, `.bmp`, `.tiff`, etc.).
     pub fn save(&self, path: impl AsRef<Path>) -> image::ImageResult<()> {
         let data: Vec<u8> = self
             .pixels
@@ -39,12 +46,5 @@ impl<const W: usize, const H: usize> RGBAImage<W, H> {
         let buf =
             ImgBuf::from_raw(W as u32, H as u32, data).expect("pixel buffer must match dimensions");
         buf.save(path)
-    }
-}
-
-impl CubeBlockImage {
-    /// 导出到文件，委托给内部 RGBAImage
-    pub fn save(&self, path: impl AsRef<Path>) -> image::ImageResult<()> {
-        self.image.save(path)
     }
 }

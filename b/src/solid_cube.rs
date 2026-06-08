@@ -1,23 +1,29 @@
-use std::{ops::Deref, path::PathBuf};
+//! A cube whose appearance is loaded from a 13×13 PNG file.
 
-use crate::{concept::Cube, data::RGBAColor};
+use std::ops::Deref;
+use std::path::PathBuf;
 
-type CubeImage = [[RGBAColor; 13]; 13];
+use crate::color::RGBAColor;
+use crate::cube::{Cube, CubeImage};
 
-/// 图形构成的方块, 暂时从 PNG 文件加载
+/// A cube backed by a PNG image file.
 pub struct SolidCube {
     pub src_path: PathBuf,
-    image: CubeImage, // 缓存加载后的图像数据
+    image: CubeImage,
 }
 
 impl SolidCube {
+    /// Load a 13×13 PNG as a [`SolidCube`].
+    ///
+    /// # Panics
+    /// Panics if the image dimensions are not exactly 13×13.
     pub fn new(src_path: impl Into<PathBuf>) -> image::ImageResult<Self> {
         let path = src_path.into();
         let img = image::open(&path)?.to_rgba8();
         let (w, h) = img.dimensions();
 
-        assert_eq!(w, 13, "SolidCube 图像宽度必须为 13");
-        assert_eq!(h, 13, "SolidCube 图像高度必须为 13");
+        assert_eq!(w, 13, "SolidCube image width must be 13, got {w}");
+        assert_eq!(h, 13, "SolidCube image height must be 13, got {h}");
 
         let mut cube_image = [[RGBAColor::default(); 13]; 13];
         for y in 0..13 {
@@ -47,11 +53,8 @@ impl Deref for SolidCube {
     }
 }
 
-use std::process::Command;
-
 impl Cube for SolidCube {
     fn show(&self) {
-        // 将 13x13 图像数据转换为可保存的格式
         let data: Vec<u8> = self
             .image
             .iter()
@@ -62,33 +65,23 @@ impl Cube for SolidCube {
         let img =
             image::RgbaImage::from_raw(13, 13, data).expect("pixel buffer must match dimensions");
 
-        // 保存到临时文件
         let tmp_path = std::env::temp_dir().join("cube_preview.png");
-        img.save(&tmp_path).expect("无法保存预览图像");
+        img.save(&tmp_path).expect("failed to save preview image");
 
-        // 调用系统默认图片查看器
         #[cfg(target_os = "macos")]
-        {
-            Command::new("open")
-                .arg(&tmp_path)
-                .spawn()
-                .expect("无法打开预览");
-        }
-
+        std::process::Command::new("open")
+            .arg(&tmp_path)
+            .spawn()
+            .expect("failed to open preview");
         #[cfg(target_os = "linux")]
-        {
-            Command::new("xdg-open")
-                .arg(&tmp_path)
-                .spawn()
-                .expect("无法打开预览");
-        }
-
+        std::process::Command::new("xdg-open")
+            .arg(&tmp_path)
+            .spawn()
+            .expect("failed to open preview");
         #[cfg(target_os = "windows")]
-        {
-            Command::new("cmd")
-                .args(["/c", "start", tmp_path.to_str().unwrap()])
-                .spawn()
-                .expect("无法打开预览");
-        }
+        std::process::Command::new("cmd")
+            .args(["/c", "start", tmp_path.to_str().unwrap()])
+            .spawn()
+            .expect("failed to open preview");
     }
 }

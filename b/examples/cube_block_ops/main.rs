@@ -4,7 +4,7 @@ fn main() -> image::ImageResult<()> {
     b::display::print_file_header("examples/cube_block_ops/main.rs");
 
     step!("1. 创建空区块，渲染并查看", {
-        let block = b::concept::CubeBlock::default();
+        let block = b::block::CubeBlock::default();
         assert!(block.is_empty());
         println!("空区块创建成功，方块数: {}", block.count());
 
@@ -17,7 +17,7 @@ fn main() -> image::ImageResult<()> {
     });
 
     step!("2. 放置四个方块，渲染并查看", {
-        let mut block = b::concept::CubeBlock::default();
+        let mut block = b::block::CubeBlock::default();
 
         let cube1 = b::solid_cube::SolidCube::new("examples/cube_block_ops/assets/some_cube.png")?;
         let cube2 = b::solid_cube::SolidCube::new("examples/cube_block_ops/assets/some_cube.png")?;
@@ -41,7 +41,7 @@ fn main() -> image::ImageResult<()> {
     });
 
     step!("3. 移除一个方块，渲染并查看", {
-        let mut block = b::concept::CubeBlock::default();
+        let mut block = b::block::CubeBlock::default();
 
         let cube1 = b::solid_cube::SolidCube::new("examples/cube_block_ops/assets/some_cube.png")?;
         let cube2 = b::solid_cube::SolidCube::new("examples/cube_block_ops/assets/some_cube.png")?;
@@ -67,7 +67,7 @@ fn main() -> image::ImageResult<()> {
     });
 
     step!("4. 清空区块，渲染并查看", {
-        let mut block = b::concept::CubeBlock::default();
+        let mut block = b::block::CubeBlock::default();
 
         let cube1 = b::solid_cube::SolidCube::new("examples/cube_block_ops/assets/some_cube.png")?;
         let cube2 = b::solid_cube::SolidCube::new("examples/cube_block_ops/assets/some_cube.png")?;
