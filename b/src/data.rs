@@ -1,4 +1,4 @@
-#[derive(Clone)]
+#[derive(Clone, Copy)]
 pub struct RGBAColor {
     pub r: u8,
     pub g: u8,
@@ -16,20 +16,22 @@ impl Default for RGBAColor {
         }
     }
 }
-pub struct RGBAImage {
-    pub pixels: Vec<Vec<RGBAColor>>,
+
+/// 固定尺寸的 RGBA 图像, 宽 W, 高 H
+pub struct RGBAImage<const W: usize, const H: usize> {
+    pub pixels: [[RGBAColor; W]; H],
 }
 
-impl RGBAImage {
-    pub fn new(x: usize, y: usize, background_color: RGBAColor) -> Self {
+impl<const W: usize, const H: usize> RGBAImage<W, H> {
+    pub fn new(background_color: RGBAColor) -> Self {
         RGBAImage {
-            pixels: vec![vec![background_color; x]; y],
+            pixels: [[background_color; W]; H],
         }
     }
 }
 
-impl Default for RGBAImage {
+impl<const W: usize, const H: usize> Default for RGBAImage<W, H> {
     fn default() -> Self {
-        RGBAImage::new(16, 16, RGBAColor::default())
+        RGBAImage::new(RGBAColor::default())
     }
 }
