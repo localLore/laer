@@ -123,9 +123,9 @@ impl CubeBlock {
         let offset_x: isize = 90;
         let offset_y: isize = 120;
 
-        for x in 0..16 {
+        for z in 0..16 {
             for y in 0..16 {
-                for z in 0..16 {
+                for x in 0..16 {
                     if let Some(cube) = self.get(x, y, z) {
                         let cube_pixels: &CubeImage = cube.deref();
 
