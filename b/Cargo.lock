@@ -225,7 +225,9 @@ checksum = "9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801"
 
 [[package]]
 name = "code-steps"
-version = "0.1.1"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0b834b341f8605c000a6413310e819089fb47336718ef3df8e842e5c7e6bea8e"
 dependencies = [
  "code-steps-macros",
  "syntect",
@@ -234,7 +236,9 @@ dependencies = [
 
 [[package]]
 name = "code-steps-macros"
-version = "0.1.1"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6e327ccf05381dcd3ab86d781afa4fbefab53c9fe5a5bf401a5d22546db3dca1"
 dependencies = [
  "quote",
  "syn",
