@@ -78,7 +78,8 @@ impl<const N: usize> BlockMap<N> {
 
     /// Convert into a [`CubeBlock`] (16³), placing each occupied cell as an
     /// [`OwnedCube`] looked up from `pack`. Cubes go in the first N×N×N
-    /// corner; after this you can `.render()`, `.show()`, `.save()`, etc.
+    /// corner; after this you can `.render_to_rgba_image()`, `.show_self()`,
+    /// `.save_as_png_file()`, etc.
     pub fn to_cube_block(&self, pack: &ResourcePack) -> CubeBlock {
         let mut block = CubeBlock::new();
         for (x, y, z, index) in self.iter() {

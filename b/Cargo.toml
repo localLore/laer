@@ -5,4 +5,10 @@ edition = "2024"
 
 [dependencies]
 image = "0.25"
-code-steps = { path = "code-steps" }
+code-steps = "0.3"
+
+[package.metadata.code-steps]
+theme = "ayu-dark"
+typewriter = true
+typewriter-speed = 50
+typewriter-line-pause = 60

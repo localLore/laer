@@ -7,6 +7,7 @@ use crate::color::RGBAColor;
 use crate::cube::{Cube, CubeImage};
 
 /// A cube backed by a PNG image file.
+#[derive(Clone)]
 pub struct SolidCube {
     pub src_path: PathBuf,
     image: CubeImage,
