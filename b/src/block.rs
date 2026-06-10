@@ -23,7 +23,13 @@ impl CubeBlock {
     ///
     /// # Panics
     /// Panics if any coordinate is ≥ 16.
-    pub fn place(&mut self, x: usize, y: usize, z: usize, cube: Box<dyn Cube<Target = CubeImage>>) {
+    pub fn place_cube(
+        &mut self,
+        x: usize,
+        y: usize,
+        z: usize,
+        cube: Box<dyn Cube<Target = CubeImage>>,
+    ) {
         assert!(x < 16, "x out of range: {x}");
         assert!(y < 16, "y out of range: {y}");
         assert!(z < 16, "z out of range: {z}");
@@ -34,7 +40,7 @@ impl CubeBlock {
     ///
     /// # Panics
     /// Panics if any coordinate is ≥ 16.
-    pub fn remove(&mut self, x: usize, y: usize, z: usize) -> CubeSlot {
+    pub fn remove_cube(&mut self, x: usize, y: usize, z: usize) -> CubeSlot {
         assert!(x < 16, "x out of range: {x}");
         assert!(y < 16, "y out of range: {y}");
         assert!(z < 16, "z out of range: {z}");
@@ -45,7 +51,7 @@ impl CubeBlock {
     ///
     /// # Panics
     /// Panics if any coordinate is ≥ 16.
-    pub fn get(&self, x: usize, y: usize, z: usize) -> Option<&dyn Cube<Target = CubeImage>> {
+    pub fn get_cube(&self, x: usize, y: usize, z: usize) -> Option<&dyn Cube<Target = CubeImage>> {
         assert!(x < 16, "x out of range: {x}");
         assert!(y < 16, "y out of range: {y}");
         assert!(z < 16, "z out of range: {z}");
@@ -76,7 +82,7 @@ impl CubeBlock {
     ///
     /// # Panics
     /// Panics if any coordinate is ≥ 16.
-    pub fn occupied(&self, x: usize, y: usize, z: usize) -> bool {
+    pub fn is_occupied(&self, x: usize, y: usize, z: usize) -> bool {
         assert!(x < 16, "x out of range: {x}");
         assert!(y < 16, "y out of range: {y}");
         assert!(z < 16, "z out of range: {z}");
@@ -84,7 +90,7 @@ impl CubeBlock {
     }
 
     /// Remove all cubes from the block.
-    pub fn clear(&mut self) {
+    pub fn clear_all_cubes(&mut self) {
         for x in 0..16 {
             for y in 0..16 {
                 for z in 0..16 {
@@ -95,7 +101,7 @@ impl CubeBlock {
     }
 
     /// Return the number of occupied slots.
-    pub fn count(&self) -> usize {
+    pub fn count_occupied_slots(&self) -> usize {
         self.cubes
             .iter()
             .flat_map(|layer| layer.iter())
@@ -105,8 +111,8 @@ impl CubeBlock {
     }
 
     /// Return `true` if the block contains no cubes.
-    pub fn is_empty(&self) -> bool {
-        self.count() == 0
+    pub fn is_empty_block(&self) -> bool {
+        self.count_occupied_slots() == 0
     }
 
     /// Render the block into a 193×193 isometric image.
@@ -120,7 +126,7 @@ impl CubeBlock {
     /// ```
     ///
     /// Cube (0,0,0) anchors at the canvas top-left.
-    pub fn render(&self) -> CubeBlockImage {
+    pub fn render_to_rgba_image(&self) -> CubeBlockImage {
         let mut image = CubeBlockImage::default();
 
         let offset_x: isize = 90;
@@ -129,7 +135,7 @@ impl CubeBlock {
         for z in 0..16 {
             for y in 0..16 {
                 for x in 0..16 {
-                    if let Some(cube) = self.get(x, y, z) {
+                    if let Some(cube) = self.get_cube(x, y, z) {
                         let cube_pixels: &CubeImage = cube.deref();
 
                         let screen_x = offset_x - (x as isize * 6) + (y as isize * 6);

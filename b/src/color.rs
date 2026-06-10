@@ -23,12 +23,9 @@ impl Default for RGBAColor {
 impl RGBAColor {
     /// Standard "over" alpha compositing: blend `self` (source / foreground)
     /// onto `dst` (destination / background), returning the resulting color.
-    ///
-    /// Uses straight (non-premultiplied) alpha with 16-bit intermediates
-    /// to avoid overflow and preserve precision.
     pub fn blend_over(&self, dst: &RGBAColor) -> RGBAColor {
-        let sa = self.a as u16;
-        let da = dst.a as u16;
+        let sa = self.a as u32;
+        let da = dst.a as u32;
 
         // Fast paths for common edge cases.
         if sa == 255 {
@@ -44,9 +41,9 @@ impl RGBAColor {
         let inv_sa = 255 - sa;
         let out_a = sa + da * inv_sa / 255;
 
-        let r = (self.r as u16 * sa + dst.r as u16 * da * inv_sa / 255) / out_a;
-        let g = (self.g as u16 * sa + dst.g as u16 * da * inv_sa / 255) / out_a;
-        let b = (self.b as u16 * sa + dst.b as u16 * da * inv_sa / 255) / out_a;
+        let r = (self.r as u32 * sa + dst.r as u32 * da * inv_sa / 255) / out_a;
+        let g = (self.g as u32 * sa + dst.g as u32 * da * inv_sa / 255) / out_a;
+        let b = (self.b as u32 * sa + dst.b as u32 * da * inv_sa / 255) / out_a;
 
         RGBAColor {
             r: r as u8,

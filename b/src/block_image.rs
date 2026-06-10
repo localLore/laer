@@ -31,14 +31,15 @@ impl Default for CubeBlockImage {
 
 impl CubeBlockImage {
     /// Save to file (delegates to [`RGBAImage::save`]).
-    pub fn save(&self, path: impl AsRef<Path>) -> image::ImageResult<()> {
+    pub fn save_as_png_file(&self, path: impl AsRef<Path>) -> image::ImageResult<()> {
         self.image.save(path)
     }
 
     /// Open the block image in the system default image viewer.
-    pub fn show(&self) {
+    pub fn show_self(&self) {
         let tmp_path = std::env::temp_dir().join("cube_block_preview.png");
-        self.save(&tmp_path).expect("failed to save preview image");
+        self.save_as_png_file(&tmp_path)
+            .expect("failed to save preview image");
 
         #[cfg(target_os = "macos")]
         std::process::Command::new("open")

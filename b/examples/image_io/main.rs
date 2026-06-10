@@ -5,7 +5,7 @@ fn main() -> image::ImageResult<()> {
 
     step!("1. 创建 193x193 透明底图像，导出为 PNG", {
         let block_img = b::block_image::CubeBlockImage::default();
-        block_img.save("examples/image_io/export/cube_transparent.png")?;
+        block_img.save_as_png_file("examples/image_io/export/cube_transparent.png")?;
         [wait]
     });
 
@@ -17,7 +17,7 @@ fn main() -> image::ImageResult<()> {
             a: 255,
         };
         let block_img = b::block_image::CubeBlockImage::new(white);
-        block_img.save("examples/image_io/export/cube_white.png")?;
+        block_img.save_as_png_file("examples/image_io/export/cube_white.png")?;
         [wait]
     });
 

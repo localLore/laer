@@ -12,7 +12,8 @@ fn main() -> image::ImageResult<()> {
 
     step!("2. 创建 193x193 透明底区块图像，导出为 PNG", {
         let block_img = b::block_image::CubeBlockImage::default();
-        block_img.save("examples/cube_and_block_image_io/export/block_transparent.png")?;
+        block_img
+            .save_as_png_file("examples/cube_and_block_image_io/export/block_transparent.png")?;
         [wait]
     });
 
@@ -24,7 +25,7 @@ fn main() -> image::ImageResult<()> {
             a: 255,
         };
         let block_img = b::block_image::CubeBlockImage::new(white);
-        block_img.save("examples/cube_and_block_image_io/export/block_white.png")?;
+        block_img.save_as_png_file("examples/cube_and_block_image_io/export/block_white.png")?;
         [wait]
     });
 
